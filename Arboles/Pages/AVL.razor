@@ -1,5 +1,57 @@
-﻿<h3>AVL</h3>
+﻿@page "/arbolesAVL"
+@using ArbolBalanceado.Services
+@inject ArbolBalanceadoNodo<int> avlTreeService
+
+<h3>AVL Tree Operations</h3>
+
+<div>
+    <input @bind="value" type="number" placeholder="Enter a value" />
+    <button @onclick="InsertValue">Insert</button>
+    <button @onclick="RemoveValue">Remove</button>
+    <button @onclick="FindValue">Find</button>
+</div>
+
+<div>
+    <h4>In-Order Traversal</h4>
+    <ul>
+        @foreach (var item in inOrderValues)
+        {
+            <li>@item</li>
+        }
+    </ul>
+</div>
 
 @code {
-    
+    private int value;
+    private List<int> inOrderValues = new List<int>();
+
+    private void InsertValue()
+    {
+        avlTreeService.Insert(value);
+        UpdateTree();
+    }
+
+    private void RemoveValue()
+    {
+        avlTreeService.Remove(value);
+        UpdateTree();
+    }
+
+    private void FindValue()
+    {
+        bool found = avlTreeService.Contains(value);
+        if (found)
+        {
+            // Show a message or handle the found value
+        }
+        else
+        {
+            // Show a message or handle the not found case
+        }
+    }
+
+    private void UpdateTree()
+    {
+        inOrderValues = avlTreeService.InOrderTraversal().ToList();
+    }
 }
