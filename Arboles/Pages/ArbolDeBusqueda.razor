@@ -22,6 +22,12 @@
                     </div>
                     <button class="btn btn-primary btn-block" @onclick="BuscarValor">Buscar</button>
                     <hr />
+                    <div class="form-group">
+                        <label for="valorEliminar">Eliminar un valor:</label>
+                        <input type="number" class="form-control" id="valorEliminar" @bind="valorAEliminar" />
+                    </div>
+                    <button class="btn btn-danger btn-block" @onclick="EliminarValor">Eliminar</button>
+                    <hr />
                     @if (!string.IsNullOrEmpty(mensajeError))
                     {
                         <div class="text-danger">@mensajeError</div>
@@ -55,6 +61,7 @@
 @code {
     private int valorAInsertar;
     private int valorABuscar;
+    private int valorAEliminar;
     private string mensajeError;
     private string mensajeBusqueda;
     private int? valorEncontrado;
@@ -101,6 +108,31 @@
         }
         valoresRecorridos = RecorrerArbol(ArbolServicio.NodoRaiz, new List<int?>());
         StateHasChanged();
+    }
+
+    private void EliminarValor()
+    {
+        try
+        {
+            bool resultado = ArbolServicio.Eliminar(valorAEliminar);
+            if (resultado)
+            {
+                mensajeBusqueda = $"Nodo {valorAEliminar} eliminado.";
+                valorAEliminar = 0;
+                valorEncontrado = null;
+            }
+            else
+            {
+                mensajeBusqueda = $"No se pudo eliminar el nodo {valorAEliminar}.";
+            }
+            valoresRecorridos = RecorrerArbol(ArbolServicio.NodoRaiz, new List<int?>());
+            StateHasChanged();
+        }
+        catch (Exception ex)
+        {
+            mensajeError = $"Error al eliminar el valor: {ex.Message}";
+            StateHasChanged();
+        }
     }
 
     private List<int?> RecorrerArbol(Arboles.Models.Nodo nodo)
