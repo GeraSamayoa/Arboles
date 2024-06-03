@@ -1,7 +1,123 @@
 ﻿@page "/"
 
-<PageTitle>Home</PageTitle>
+<PageTitle>Árbol Binario de Búsqueda</PageTitle>
 
-<h1>Hello, world!</h1>
+<div class="container my-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header bg-primary text-white">
+                    <h3>Árbol Binario de Búsqueda</h3>
+                </div>
+                <div class="card-body">
+                    <div class="form-group">
+                        <label for="valorInput">Ingresa un valor:</label>
+                        <input type="number" class="form-control" id="valorInput" @bind="valorAInsertar" />
+                    </div>
+                    <button class="btn btn-success btn-block" @onclick="InsertarValor">Insertar</button>
+                    <hr />
+                    <div class="form-group">
+                        <label for="valorBusqueda">Buscar un valor:</label>
+                        <input type="number" class="form-control" id="valorBusqueda" @bind="valorABuscar" />
+                    </div>
+                    <button class="btn btn-primary btn-block" @onclick="BuscarValor">Buscar</button>
+                    <hr />
+                    @if (!string.IsNullOrEmpty(mensajeError))
+                    {
+                        <div class="text-danger">@mensajeError</div>
+                    }
+                    @if (!string.IsNullOrEmpty(mensajeBusqueda))
+                    {
+                        <div class="text-info">@mensajeBusqueda</div>
+                    }
+                    <ul class="list-group">
+                        @if (ArbolServicio.NodoRaiz != null)
+                        {
+                            var valores = RecorrerArbol(ArbolServicio.NodoRaiz, new List<int?>());
+                            foreach (var valor in valores)
+                            {
+                                <li class="list-group-item @(valor == valorEncontrado ? "list-group-item-success" : "")">
+                                    @valor
+                                    @if (valor == valorEncontrado)
+                                    {
+                                        <span class="badge badge-pill badge-info">Nodo encontrado</span>
+                                    }
+                                </li>
+                            }
+                        }
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
-Welcome to your new app.
+@code {
+    private int valorAInsertar;
+    private int valorABuscar;
+    private string mensajeError;
+    private string mensajeBusqueda;
+    private int? valorEncontrado;
+    private List<int?> valoresRecorridos;
+
+    [Inject]
+    public Arboles.Services.ArbolBinarioBusqueda ArbolServicio { get; set; }
+
+    private void InsertarValor()
+    {
+        try
+        {
+            bool resultado = ArbolServicio.Insertar(valorAInsertar);
+            if (resultado)
+            {
+                valorAInsertar = 0;
+                mensajeError = null;
+                StateHasChanged();
+            }
+            else
+            {
+                mensajeError = "El valor ya existe en el árbol.";
+                StateHasChanged();
+            }
+        }
+        catch (Exception ex)
+        {
+            mensajeError = $"Error al insertar el valor: {ex.Message}";
+            StateHasChanged();
+        }
+    }
+
+    private void BuscarValor()
+    {
+        if (ArbolServicio.Buscar(valorABuscar))
+        {
+            valorEncontrado = valorABuscar;
+            mensajeBusqueda = $"Nodo {valorABuscar} encontrado.";
+        }
+        else
+        {
+            valorEncontrado = null;
+            mensajeBusqueda = $"Nodo {valorABuscar} no encontrado.";
+        }
+        valoresRecorridos = RecorrerArbol(ArbolServicio.NodoRaiz, new List<int?>());
+        StateHasChanged();
+    }
+
+    private List<int?> RecorrerArbol(Arboles.Models.Nodo nodo)
+    {
+        List<int?> valores = new List<int?>();
+        return RecorrerArbol(nodo, valores);
+    }
+
+    private List<int?> RecorrerArbol(Arboles.Models.Nodo nodo, List<int?> valores)
+    {
+        if (nodo == null)
+            return valores;
+
+        RecorrerArbol(nodo.RamaIzquierda, valores);
+        valores.Add(nodo.Informacion);
+        RecorrerArbol(nodo.RamaDerecha, valores);
+
+        return valores;
+    }
+}
