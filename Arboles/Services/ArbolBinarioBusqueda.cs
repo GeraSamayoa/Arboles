@@ -65,5 +65,58 @@ namespace Arboles.Services
             else
                 return Buscar(nodo.RamaDerecha, valor);
         }
+
+        public List<int> RecorrerPreorden()
+        {
+            var resultado = new List<int>();
+            RecorrerPreorden(NodoRaiz, resultado);
+            return resultado;
+        }
+
+        private void RecorrerPreorden(Nodo? nodo, List<int> resultado)
+        {
+            if (nodo != null)
+            {
+                resultado.Add((int)nodo.Informacion);
+                RecorrerPreorden(nodo.RamaIzquierda, resultado);
+                RecorrerPreorden(nodo.RamaDerecha, resultado);
+            }
+        }
+
+        // Recorrido en Inorden
+        public List<int> RecorrerInorden()
+        {
+            var resultado = new List<int>();
+            RecorrerInorden(NodoRaiz, resultado);
+            return resultado;
+        }
+
+        private void RecorrerInorden(Nodo? nodo, List<int> resultado)
+        {
+            if (nodo != null)
+            {
+                RecorrerInorden(nodo.RamaIzquierda, resultado);
+                resultado.Add((int)nodo.Informacion);
+                RecorrerInorden(nodo.RamaDerecha, resultado);
+            }
+        }
+
+        // Recorrido en Postorden
+        public List<int> RecorrerPostorden()
+        {
+            var resultado = new List<int>();
+            RecorrerPostorden(NodoRaiz, resultado);
+            return resultado;
+        }
+
+        private void RecorrerPostorden(Nodo? nodo, List<int> resultado)
+        {
+            if (nodo != null)
+            {
+                RecorrerPostorden(nodo.RamaIzquierda, resultado);
+                RecorrerPostorden(nodo.RamaDerecha, resultado);
+                resultado.Add((int)nodo.Informacion);
+            }
+        }
     }
 }
