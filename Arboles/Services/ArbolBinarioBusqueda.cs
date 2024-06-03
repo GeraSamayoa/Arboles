@@ -5,6 +5,7 @@ namespace Arboles.Services
     public class ArbolBinarioBusqueda
     {
         public Nodo? NodoRaiz { get; set; }
+        public int ? TotalNodos { get; set; }
 
         public ArbolBinarioBusqueda()
         {
