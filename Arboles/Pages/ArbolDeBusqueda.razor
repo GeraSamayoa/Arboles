@@ -33,8 +33,38 @@
                     <ul class="list-group">
                         @if (ArbolServicio.NodoRaiz != null)
                         {
-                            var valores = RecorrerArbol(ArbolServicio.NodoRaiz, new List<int?>());
+                            var valores = RecorrerArbol(ArbolServicio.NodoRaiz, new List<int>());
                             foreach (var valor in valores)
+                            {
+                                <li class="list-group-item @(valor == valorEncontrado ? "list-group-item-success" : "")">
+                                    @valor
+                                    @if (valor == valorEncontrado)
+                                    {
+                                        <span class="badge badge-pill badge-info">Nodo encontrado</span>
+                                    }
+                                </li>
+                            }
+                        }
+                    </ul>
+                    <hr />
+                    <div>
+                        <button class="btn btn-outline-primary" @onclick="RecorrerInorden">Inorden</button>
+                        <button class="btn btn-outline-primary" @onclick="RecorrerPreorden">Preorden</button>
+                        <button class="btn btn-outline-primary" @onclick="RecorrerPostorden">Postorden</button>
+                    </div>
+                    <hr />
+                    @if (!string.IsNullOrEmpty(mensajeError))
+                    {
+                        <div class="text-danger">@mensajeError</div>
+                    }
+                    @if (!string.IsNullOrEmpty(mensajeBusqueda))
+                    {
+                        <div class="text-info">@mensajeBusqueda</div>
+                    }
+                    <ul class="list-group">
+                        @if (valoresRecorridos != null && valoresRecorridos.Count > 0)
+                        {
+                            foreach (var valor in valoresRecorridos)
                             {
                                 <li class="list-group-item @(valor == valorEncontrado ? "list-group-item-success" : "")">
                                     @valor
@@ -58,7 +88,7 @@
     private string mensajeError;
     private string mensajeBusqueda;
     private int? valorEncontrado;
-    private List<int?> valoresRecorridos;
+    private List<int> valoresRecorridos;
 
     [Inject]
     public Arboles.Services.ArbolBinarioBusqueda ArbolServicio { get; set; }
@@ -99,25 +129,43 @@
             valorEncontrado = null;
             mensajeBusqueda = $"Nodo {valorABuscar} no encontrado.";
         }
-        valoresRecorridos = RecorrerArbol(ArbolServicio.NodoRaiz, new List<int?>());
+        valoresRecorridos = RecorrerArbol(ArbolServicio.NodoRaiz, new List<int>());
         StateHasChanged();
     }
 
-    private List<int?> RecorrerArbol(Arboles.Models.Nodo nodo)
+    private List<int> RecorrerArbol(Arboles.Models.Nodo nodo)
     {
-        List<int?> valores = new List<int?>();
+        List<int> valores = new List<int>();
         return RecorrerArbol(nodo, valores);
     }
 
-    private List<int?> RecorrerArbol(Arboles.Models.Nodo nodo, List<int?> valores)
+    private List<int> RecorrerArbol(Arboles.Models.Nodo nodo, List<int> valores)
     {
         if (nodo == null)
             return valores;
 
         RecorrerArbol(nodo.RamaIzquierda, valores);
-        valores.Add(nodo.Informacion);
+        valores.Add((int)nodo.Informacion);
         RecorrerArbol(nodo.RamaDerecha, valores);
 
         return valores;
+    }
+
+    private void RecorrerInorden()
+    {
+        valoresRecorridos = ArbolServicio.RecorrerInorden();
+        StateHasChanged();
+    }
+
+    private void RecorrerPreorden()
+    {
+        valoresRecorridos = ArbolServicio.RecorrerPreorden();
+        StateHasChanged();
+    }
+
+    private void RecorrerPostorden()
+    {
+        valoresRecorridos = ArbolServicio.RecorrerPostorden();
+        StateHasChanged();
     }
 }
