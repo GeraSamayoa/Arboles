@@ -1,7 +1,193 @@
 ﻿@page "/"
+@using Arboles.Models
 
-<PageTitle>Home</PageTitle>
+<h3>Árbol de Búsqueda</h3>
 
-<h1>Hello, world!</h1>
+<div>
+    <label>Valor para agregar al árbol:</label>
+    <input type="number" @bind-value="valorNuevo" />
+    <button @onclick="PoblarArbolBusqueda">Agregar Nodo</button>
+</div>
 
-Welcome to your new app.
+<div>
+    <label>Valor para agregar como rama izquierda:</label>
+    <input type="number" @bind-value="valorRamaIzquierda" />
+    <button @onclick="AgregarRamaIzquierda">Agregar Rama Izquierda</button>
+</div>
+
+<div>
+    <label>Valor para agregar como rama derecha:</label>
+    <input type="number" @bind-value="valorRamaDerecha" />
+    <button @onclick="AgregarRamaDerecha">Agregar Rama Derecha</button>
+</div>
+
+<div>
+    <label>Valor a eliminar:</label>
+    <input type="number" @bind-value="valorAEliminar" />
+    <button @onclick="EliminarNodo">Eliminar Nodo</button>
+</div>
+
+<h4>Visualización del árbol:</h4>
+<div style="display: flex; justify-content: center; white-space: pre;">
+    @VisualizarArbol(NodoRaiz)
+</div>
+
+@code {
+    Nodo NodoRaiz;
+    private int? valorNuevo;
+    private int? valorRamaIzquierda;
+    private int? valorRamaDerecha;
+    private int? valorAEliminar;
+
+    private void PoblarArbolBusqueda()
+    {
+        if (valorNuevo != null)
+        {
+            NodoRaiz = InsertarNodo(NodoRaiz, (int)valorNuevo);
+        }
+    }
+
+    private Nodo InsertarNodo(Nodo nodo, int valor)
+    {
+        if (nodo == null)
+        {
+            nodo = new Nodo(valor);
+        }
+        else if (valor < nodo.Informacion)
+        {
+            nodo.RamaIzquierda = InsertarNodo(nodo.RamaIzquierda, valor);
+        }
+        else if (valor > nodo.Informacion)
+        {
+            nodo.RamaDerecha = InsertarNodo(nodo.RamaDerecha, valor);
+        }
+
+        return nodo;
+    }
+
+    private void AgregarRamaIzquierda()
+    {
+        if (valorRamaIzquierda != null)
+        {
+            if (NodoRaiz == null)
+            {
+                NodoRaiz = new Nodo((int)valorRamaIzquierda);
+            }
+            else
+            {
+                InsertarNodo(NodoRaiz, (int)valorRamaIzquierda);
+            }
+        }
+    }
+
+    private void AgregarRamaDerecha()
+    {
+        if (valorRamaDerecha != null)
+        {
+            if (NodoRaiz == null)
+            {
+                NodoRaiz = new Nodo((int)valorRamaDerecha);
+            }
+            else
+            {
+                InsertarNodo(NodoRaiz, (int)valorRamaDerecha);
+            }
+        }
+    }
+
+    private void EliminarNodo()
+    {
+        if (valorAEliminar != null)
+        {
+            Eliminar((int)valorAEliminar);
+        }
+    }
+
+    private void Eliminar(int valor)
+    {
+        NodoRaiz = EliminarRecursivo(NodoRaiz, valor);
+    }
+
+    private Nodo EliminarRecursivo(Nodo actual, int valor)
+    {
+        if (actual == null)
+        {
+            return null;
+        }
+
+        if (valor == actual.Informacion)
+        {
+            if (actual.RamaIzquierda == null && actual.RamaDerecha == null)
+            {
+                return null;
+            }
+            else if (actual.RamaIzquierda == null)
+            {
+                return actual.RamaDerecha;
+            }
+            else if (actual.RamaDerecha == null)
+            {
+                return actual.RamaIzquierda;
+            }
+            else
+            {
+                Nodo sucesor = ObtenerSucesor(actual.RamaDerecha);
+                actual.Informacion = sucesor.Informacion;
+                actual.RamaDerecha = EliminarRecursivo(actual.RamaDerecha, sucesor.Informacion);
+                return actual;
+            }
+        }
+        else if (valor < actual.Informacion)
+        {
+            actual.RamaIzquierda = EliminarRecursivo(actual.RamaIzquierda, valor);
+        }
+        else
+        {
+            actual.RamaDerecha = EliminarRecursivo(actual.RamaDerecha, valor);
+        }
+
+        return actual;
+    }
+
+    private Nodo ObtenerSucesor(Nodo actual)
+    {
+        while (actual.RamaIzquierda != null)
+        {
+            actual = actual.RamaIzquierda;
+        }
+        return actual;
+    }
+
+    private MarkupString VisualizarArbol(Nodo nodo)
+    {
+        if (nodo == null)
+        {
+            return new MarkupString("");
+        }
+
+        System.Text.StringBuilder sb = new System.Text.StringBuilder();
+        VisualizarArbolRecursivo(sb, nodo, "", true);
+        return new MarkupString(sb.ToString());
+    }
+
+    private void VisualizarArbolRecursivo(System.Text.StringBuilder sb, Nodo nodo, string indent, bool last)
+    {
+        if (nodo != null)
+        {
+            sb.Append(indent);
+            if (last)
+            {
+                sb.Append("└─");
+                indent += "  ";
+            }
+            else
+            {
+                sb.Append("├─");
+                indent += "| ";
+            }
+            sb.AppendLine(nodo.Informacion.ToString());
+            VisualizarArbolRecursivo(sb, nodo.RamaIzquierda, indent, nodo.RamaDerecha == null);
+            VisualizarArbolRecursivo(sb, nodo.RamaDerecha, indent, true);
+        }
+    }
+}

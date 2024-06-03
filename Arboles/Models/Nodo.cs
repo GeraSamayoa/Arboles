@@ -4,7 +4,7 @@
     {
         public Nodo? RamaIzquierda { get; set; }
 
-        public int? Informacion { get; set; }
+        public int Informacion { get; set; }
 
         public Nodo? RamaDerecha { get; set; }
         public Nodo()
@@ -14,7 +14,7 @@
             RamaDerecha = null;
         }
 
-        public Nodo(int? informacion)
+        public Nodo(int informacion)
         {
             RamaIzquierda = null;
             Informacion = informacion;
