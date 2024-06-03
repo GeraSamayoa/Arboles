@@ -21,9 +21,18 @@
     </ul>
 </div>
 
+<div>
+    <h4>Tree Structure</h4>
+    @if (treeStructure != null)
+    {
+        <pre>@treeStructure</pre>
+    }
+</div>
+
 @code {
     private int value;
     private List<int> inOrderValues = new List<int>();
+    private string treeStructure;
 
     private void InsertValue()
     {
@@ -53,5 +62,6 @@
     private void UpdateTree()
     {
         inOrderValues = avlTreeService.InOrderTraversal().ToList();
+        treeStructure = avlTreeService.GetTreeStructure();
     }
 }

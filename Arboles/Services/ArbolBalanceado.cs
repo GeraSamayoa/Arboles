@@ -1,5 +1,4 @@
-﻿
-using Arboles.Models;
+﻿using Arboles.Models;
 using System;
 using System.Collections.Generic;
 
@@ -231,6 +230,37 @@ namespace ArbolBalanceado.Services
             nodo.Height = 1 + Math.Max(Height(nodo.Left), Height(nodo.Right));
             newRoot.Height = 1 + Math.Max(Height(newRoot.Left), Height(newRoot.Right));
             return newRoot;
+        }
+
+        public string GetTreeStructure()
+        {
+            return GetTreeStructure(root, "", true);
+        }
+
+        private string GetTreeStructure(NodoAVL<T> nodo, string indent, bool last)
+        {
+            if (nodo == null)
+            {
+                return "";
+            }
+
+            string result = indent;
+            if (last)
+            {
+                result += "└─";
+                indent += "  ";
+            }
+            else
+            {
+                result += "├─";
+                indent += "| ";
+            }
+
+            result += nodo.Value + " (H:" + nodo.Height + " B:" + BalanceFactor(nodo) + ")\n";
+            result += GetTreeStructure(nodo.Left, indent, false);
+            result += GetTreeStructure(nodo.Right, indent, true);
+
+            return result;
         }
     }
 }
