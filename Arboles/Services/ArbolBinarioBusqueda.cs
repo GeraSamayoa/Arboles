@@ -139,7 +139,7 @@ namespace Arboles.Services
             return resultado;
         }
 
-        private void RecorrerPreorden(Nodo? nodo, List<int> resultado)
+        private void RecorrerPreorden(Nodo nodo, List<int> resultado)
         {
             if (nodo != null)
             {
@@ -157,7 +157,7 @@ namespace Arboles.Services
             return resultado;
         }
 
-        private void RecorrerInorden(Nodo? nodo, List<int> resultado)
+        private void RecorrerInorden(Nodo nodo, List<int> resultado)
         {
             if (nodo != null)
             {
@@ -175,7 +175,7 @@ namespace Arboles.Services
             return resultado;
         }
 
-        private void RecorrerPostorden(Nodo? nodo, List<int> resultado)
+        private void RecorrerPostorden(Nodo nodo, List<int> resultado)
         {
             if (nodo != null)
             {

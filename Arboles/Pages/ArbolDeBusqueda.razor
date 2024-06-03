@@ -136,7 +136,7 @@
             valorEncontrado = null;
             mensajeBusqueda = $"Nodo {valorABuscar} no encontrado.";
         }
-        valoresRecorridos = RecorrerArbol(ArbolServicio.NodoRaiz, new List<int?>());
+        valoresRecorridos = RecorrerArbol(ArbolServicio.NodoRaiz, new List<int>());
         StateHasChanged();
     }
 
@@ -155,7 +155,7 @@
             {
                 mensajeBusqueda = $"No se pudo eliminar el nodo {valorAEliminar}.";
             }
-            valoresRecorridos = RecorrerArbol(ArbolServicio.NodoRaiz, new List<int?>());
+            valoresRecorridos = RecorrerArbol(ArbolServicio.NodoRaiz, new List<int>());
             StateHasChanged();
         }
         catch (Exception ex)
@@ -163,9 +163,6 @@
             mensajeError = $"Error al eliminar el valor: {ex.Message}";
             StateHasChanged();
         }
-    }
-        valoresRecorridos = RecorrerArbol(ArbolServicio.NodoRaiz, new List<int>());
-        StateHasChanged();
     }
 
     private List<int> RecorrerArbol(Arboles.Models.Nodo nodo)
@@ -180,7 +177,7 @@
             return valores;
 
         RecorrerArbol(nodo.RamaIzquierda, valores);
-        valores.Add((int)nodo.Informacion);
+        valores.Add(nodo.Informacion);
         RecorrerArbol(nodo.RamaDerecha, valores);
 
         return valores;
