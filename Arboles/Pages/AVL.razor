@@ -2,31 +2,41 @@
 @using ArbolBalanceado.Services
 @inject ArbolBalanceadoNodo<int> avlTreeService
 
-<h3>AVL Tree Operations</h3>
-
-<div>
-    <input @bind="value" type="number" placeholder="Enter a value" />
-    <button @onclick="InsertValue">Insert</button>
-    <button @onclick="RemoveValue">Remove</button>
-    <button @onclick="FindValue">Find</button>
-</div>
-
-<div>
-    <h4>In-Order Traversal</h4>
-    <ul>
-        @foreach (var item in inOrderValues)
-        {
-            <li>@item</li>
-        }
-    </ul>
-</div>
-
-<div>
-    <h4>Tree Structure</h4>
-    @if (treeStructure != null)
-    {
-        <pre>@treeStructure</pre>
-    }
+<div class="container my-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header bg-primary text-white">
+                    <h3>Árbol AVL</h3>
+                </div>
+                <div class="card-body">
+                    <div class="form-group">
+                        <label for="valorInput">Ingresa un valor:</label>
+                        <input type="number" class="form-control" id="valorInput" @bind="value" />
+                    </div>
+                    <div class="d-flex justify-content-between">
+                        <button class="btn btn-success" @onclick="InsertValue">Insertar</button>
+                        <button class="btn btn-danger" @onclick="RemoveValue">Eliminar</button>
+                        <button class="btn btn-primary" @onclick="FindValue">Buscar</button>
+                    </div>
+                    <hr />
+                    <h4>Recorrido Inorden</h4>
+                    <ul class="list-group">
+                        @foreach (var item in inOrderValues)
+                        {
+                            <li class="list-group-item">@item</li>
+                        }
+                    </ul>
+                    <hr />
+                    <h4>Estructura del Árbol</h4>
+                    @if (treeStructure != null)
+                    {
+                        <pre>@treeStructure</pre>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
 @code {
