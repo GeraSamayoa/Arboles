@@ -45,5 +45,25 @@ namespace Arboles.Services
 
             return nodo;
         }
+
+        // Búsqueda de un valor en el árbol
+        public bool Buscar(int valor)
+        {
+            return Buscar(NodoRaiz, valor);
+        }
+
+        private bool Buscar(Nodo? nodo, int valor)
+        {
+            if (nodo == null)
+                return false;
+
+            if (valor == nodo.Informacion)
+                return true;
+
+            if (valor < nodo.Informacion)
+                return Buscar(nodo.RamaIzquierda, valor);
+            else
+                return Buscar(nodo.RamaDerecha, valor);
+        }
     }
 }
