@@ -5,7 +5,7 @@ namespace Arboles.Services
     public class ArbolBinarioBusqueda
     {
         public Nodo? NodoRaiz { get; set; }
-        public int ? TotalNodos { get; set; }
+        public int? TotalNodos { get; set; }
 
         public ArbolBinarioBusqueda()
         {
@@ -64,6 +64,72 @@ namespace Arboles.Services
                 return Buscar(nodo.RamaIzquierda, valor);
             else
                 return Buscar(nodo.RamaDerecha, valor);
+        }
+
+        // Eliminar un nodo del árbol
+        public bool Eliminar(int valor)
+        {
+            try
+            {
+                NodoRaiz = EliminarRecursivo(NodoRaiz, valor);
+                return true;
+            }
+            catch (Exception ex)
+            {
+                // Manejar excepción aquí
+                Console.WriteLine($"Error al eliminar el valor {valor}: {ex.Message}");
+                return false;
+            }
+        }
+
+        private Nodo EliminarRecursivo(Nodo actual, int valor)
+        {
+            if (actual == null)
+            {
+                return null;
+            }
+
+            if (valor == actual.Informacion)
+            {
+                if (actual.RamaIzquierda == null && actual.RamaDerecha == null)
+                {
+                    return null;
+                }
+                else if (actual.RamaIzquierda == null)
+                {
+                    return actual.RamaDerecha;
+                }
+                else if (actual.RamaDerecha == null)
+                {
+                    return actual.RamaIzquierda;
+                }
+                else
+                {
+                    Nodo sucesor = ObtenerSucesor(actual.RamaDerecha);
+                    actual.Informacion = sucesor.Informacion;
+                    actual.RamaDerecha = EliminarRecursivo(actual.RamaDerecha, sucesor.Informacion);
+                    return actual;
+                }
+            }
+            else if (valor < actual.Informacion)
+            {
+                actual.RamaIzquierda = EliminarRecursivo(actual.RamaIzquierda, valor);
+            }
+            else
+            {
+                actual.RamaDerecha = EliminarRecursivo(actual.RamaDerecha, valor);
+            }
+
+            return actual;
+        }
+
+        private Nodo ObtenerSucesor(Nodo actual)
+        {
+            while (actual.RamaIzquierda != null)
+            {
+                actual = actual.RamaIzquierda;
+            }
+            return actual;
         }
 
         public List<int> RecorrerPreorden()
